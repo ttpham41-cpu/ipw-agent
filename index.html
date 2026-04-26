@@ -885,18 +885,25 @@ $('btn-connect').addEventListener('click', async () => {
     products = [];
     const collId = $('sel-collection') ? $('sel-collection').value : '';
     let page = 1;
-    // Request only active products directly from Shopify API
     while (true) {
       const base = collId
-        ? `/products.json?status=active&limit=250&page=${page}&collection_id=${collId}`
-        : `/products.json?status=active&limit=250&page=${page}`;
+        ? `/products.json?limit=250&page=${page}&collection_id=${collId}`
+        : `/products.json?limit=250&page=${page}`;
       const data = await shopifyGet(base);
       const batch = data.products || [];
       if (batch.length === 0) break;
       products = products.concat(batch);
-      $('btn-connect').textContent = `Loading… ${products.length} active products`;
+      $('btn-connect').textContent = `Loading… ${products.length} products`;
       if (batch.length < 250) break;
       page++;
+    }
+    // Filter to active products only
+    const before = products.length;
+    products = products.filter(p => p.status === 'active');
+    const skipped = before - products.length;
+    if (skipped > 0) {
+      $('btn-connect').textContent = `Found ${products.length} active (${skipped} inactive skipped)`;
+      await new Promise(r => setTimeout(r, 1500));
     }
     if (products.length === 0) { showError('No active products found.'); $('btn-connect').disabled = false; $('btn-connect').textContent = 'Start Reviewing →'; return; }
     // Check for saved progress and auto-resume
