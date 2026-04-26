@@ -882,29 +882,16 @@ $('btn-connect').addEventListener('click', async () => {
     connected = true;
     $('btn-connect').textContent = 'Loading products…';
 
-    products = [];
+    // Load all products via server-side pagination endpoint
     const collId = $('sel-collection') ? $('sel-collection').value : '';
-    let page = 1;
-    while (true) {
-      const base = collId
-        ? `/products.json?limit=250&page=${page}&collection_id=${collId}`
-        : `/products.json?limit=250&page=${page}`;
-      const data = await shopifyGet(base);
-      const batch = data.products || [];
-      if (batch.length === 0) break;
-      products = products.concat(batch);
-      $('btn-connect').textContent = `Loading… ${products.length} products`;
-      if (batch.length < 250) break;
-      page++;
-    }
-    // Filter to active products only
-    const before = products.length;
-    products = products.filter(p => p.status === 'active');
-    const skipped = before - products.length;
-    if (skipped > 0) {
-      $('btn-connect').textContent = `Found ${products.length} active (${skipped} inactive skipped)`;
-      await new Promise(r => setTimeout(r, 1500));
-    }
+    const allProductsUrl = collId
+      ? `${PROXY}/shopify-all-products?collection_id=${collId}`
+      : `${PROXY}/shopify-all-products`;
+    $('btn-connect').textContent = 'Loading all products…';
+    const allData = await fetch(allProductsUrl);
+    if (!allData.ok) throw new Error('Failed to load products: ' + allData.status);
+    const allJson = await allData.json();
+    products = allJson.products || [];
     if (products.length === 0) { showError('No active products found.'); $('btn-connect').disabled = false; $('btn-connect').textContent = 'Start Reviewing →'; return; }
     // Check for saved progress and auto-resume
     try {
