@@ -1,0 +1,1111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Isopure Water · Product Description Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #080d14;
+    color: #e2e8f0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Setup Screen ── */
+  #setup-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 24px;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(56,189,248,.08) 0%, transparent 60%), #080d14;
+  }
+
+  .setup-card {
+    width: 100%;
+    max-width: 520px;
+    background: #0f1923;
+    border: 1px solid #1e3a5f;
+    border-radius: 16px;
+    padding: 40px;
+  }
+
+  .setup-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .2em;
+    text-transform: uppercase;
+    color: #38bdf8;
+    margin-bottom: 24px;
+  }
+
+  .setup-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 24px !important;
+    font-weight: 700;
+    color: #f1f5f9;
+    line-height: 1.2;
+    margin-bottom: 8px;
+  }
+
+  .setup-sub {
+    font-size: 18px !important;
+    color: #64748b;
+    margin-bottom: 28px;
+    line-height: 1.65;
+  }
+
+  .field { margin-bottom: 18px; }
+
+  .field label {
+    display: block;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 6px;
+  }
+
+  .field input, .field select {
+    width: 100%;
+    background: #0a1520;
+    border: 1.5px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 11px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px !important;
+    color: #e2e8f0;
+    outline: none;
+    transition: border-color .2s;
+    appearance: auto;
+  }
+
+  .field input:focus, .field select:focus { border-color: #38bdf8; }
+  .field input::placeholder { color: #334155; }
+
+  .field-note {
+    font-size: 18px !important;
+    color: #475569;
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: linear-gradient(135deg, #0e4f75, #1570a6);
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    padding: 14px 24px;
+    cursor: pointer;
+    transition: opacity .2s, transform .2s;
+    margin-top: 8px;
+  }
+
+  .btn-primary:hover { opacity: .88; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: .4; cursor: not-allowed; transform: none; }
+
+  .error-box {
+    background: #1c0a0a;
+    border: 1px solid #7f1d1d;
+    border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 18px !important;
+    color: #fca5a5;
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  /* ── App Shell (hidden until loaded) ── */
+  #app-shell { display: none; flex-direction: column; height: 100vh; overflow: hidden; }
+
+  /* ── Topbar ── */
+  .topbar {
+    background: #0a1520;
+    border-bottom: 1px solid #1e3a5f;
+    padding: 0 24px;
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .topbar-brand {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: #38bdf8;
+  }
+
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+  .pill {
+    background: #0f1923;
+    border: 1px solid #1e3a5f;
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 18px !important;
+    font-weight: 500;
+    color: #94a3b8;
+  }
+
+  .pill span { color: #38bdf8; font-weight: 700; }
+  .pill .green { color: #86efac; }
+
+  .btn-sm {
+    background: #0f1923;
+    border: 1px solid #1e3a5f;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 18px !important;
+    font-weight: 600;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+
+  .btn-sm:hover { border-color: #38bdf8; color: #e2e8f0; }
+
+  /* ── Progress bar ── */
+  .progress-bar-wrap { height: 3px; background: #0a1520; flex-shrink: 0; }
+  .progress-bar-fill { height: 3px; background: linear-gradient(90deg, #0e4f75, #38bdf8); transition: width .4s ease; }
+
+  /* ── Split layout ── */
+  .review-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    overflow: hidden;
+  }
+
+  .panel {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid #1e3a5f;
+  }
+
+  .panel:last-child { border-right: none; }
+
+  .panel-header {
+    padding: 12px 22px;
+    border-bottom: 1px solid #1e3a5f;
+    background: #0a1520;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+  }
+
+  .panel-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .panel-title.current { color: #64748b; }
+  .panel-title.proposed { color: #38bdf8; }
+
+  .badge {
+    font-size: 18px !important;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  .badge-live { background: #1e293b; color: #64748b; }
+  .badge-ai { background: rgba(56,189,248,.12); color: #38bdf8; border: 1px solid rgba(56,189,248,.2); }
+  .badge-gen { background: rgba(234,179,8,.1); color: #fbbf24; border: 1px solid rgba(234,179,8,.2); animation: pulse 1.4s infinite; }
+  .badge-edit { background: rgba(234,179,8,.1); color: #fbbf24; border: 1px solid rgba(234,179,8,.2); }
+
+  @keyframes pulse { 0%,100%{opacity:1}50%{opacity:.5} }
+
+  .panel-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 22px;
+    scrollbar-width: thin;
+    scrollbar-color: #1e3a5f #0a1520;
+  }
+
+  .product-meta {
+    margin-bottom: 18px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid #1e3a5f;
+  }
+
+  .product-title-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    color: #f1f5f9;
+    margin-bottom: 7px;
+    line-height: 1.3;
+  }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .chip {
+    font-size: 18px !important;
+    font-weight: 500;
+    background: #0f1923;
+    border: 1px solid #1e3a5f;
+    color: #64748b;
+    padding: 3px 9px;
+    border-radius: 20px;
+  }
+
+  .desc-render {
+    font-size: 18px !important;
+    color: #94a3b8;
+    line-height: 1.75;
+  }
+
+  .desc-render h1, .desc-render h2, .desc-render h3, .desc-render h4 {
+    font-family: 'Syne', sans-serif;
+    color: #e2e8f0;
+    margin: 14px 0 7px;
+  }
+
+  .desc-render p { margin-bottom: 9px; }
+  .desc-render ul, .desc-render ol { padding-left: 18px; margin-bottom: 9px; }
+  .desc-render li { margin-bottom: 4px; }
+  .desc-render strong { color: #e2e8f0; font-weight: 600; }
+
+  .empty-desc {
+    font-size: 18px !important;
+    color: #334155;
+    font-style: italic;
+    padding: 20px;
+    text-align: center;
+    border: 1px dashed #1e3a5f;
+    border-radius: 8px;
+  }
+
+  .generating-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+    gap: 14px;
+    color: #64748b;
+    font-size: 18px !important;
+  }
+
+  .spinner {
+    width: 30px; height: 30px;
+    border: 3px solid #1e3a5f;
+    border-top-color: #38bdf8;
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .edit-ta {
+    width: 100%;
+    min-height: 340px;
+    background: #0a1520;
+    border: 1.5px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 18px !important;
+    color: #e2e8f0;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+    transition: border-color .2s;
+  }
+
+  .edit-ta:focus { border-color: #38bdf8; }
+
+  /* ── Action bar ── */
+  .action-bar {
+    background: #0a1520;
+    border-top: 1px solid #1e3a5f;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    gap: 10px;
+  }
+
+  .action-left { display: flex; align-items: center; gap: 8px; }
+  .action-right { display: flex; align-items: center; gap: 8px; }
+
+  .btn-skip {
+    background: transparent;
+    border: 1.5px solid #1e3a5f;
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #64748b;
+    cursor: pointer;
+    transition: border-color .2s, color .2s;
+  }
+
+  .btn-skip:hover { border-color: #94a3b8; color: #94a3b8; }
+
+  .btn-edit {
+    background: rgba(234,179,8,.08);
+    border: 1.5px solid rgba(234,179,8,.2);
+    border-radius: 8px;
+    padding: 9px 18px;
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #fbbf24;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .btn-edit:hover { background: rgba(234,179,8,.16); }
+  .btn-edit:disabled { opacity: .35; cursor: not-allowed; }
+
+  .btn-regen {
+    background: rgba(56,189,248,.08);
+    border: 1.5px solid rgba(56,189,248,.18);
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: #38bdf8;
+    cursor: pointer;
+    transition: background .2s;
+  }
+
+  .btn-regen:hover:not(:disabled) { background: rgba(56,189,248,.15); }
+  .btn-regen:disabled { opacity: .35; cursor: not-allowed; }
+
+  .btn-approve {
+    background: linear-gradient(135deg, #166534, #16a34a);
+    border: none;
+    border-radius: 8px;
+    padding: 9px 22px;
+    font-family: 'Syne', sans-serif;
+    font-size: 18px !important;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: white;
+    cursor: pointer;
+    transition: opacity .2s, transform .2s;
+  }
+
+  .btn-approve:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
+  .btn-approve:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+
+  /* ── Done screen ── */
+  #done-screen {
+    display: none;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    background: radial-gradient(ellipse 60% 50% at 50% 40%, rgba(22,163,74,.06) 0%, transparent 60%), #080d14;
+  }
+
+  .done-inner { text-align: center; max-width: 460px; }
+  .done-icon { font-size: 24px !important; margin-bottom: 18px; }
+  .done-title { font-family: 'Syne', sans-serif; font-size: 24px !important; font-weight: 700; color: #f1f5f9; margin-bottom: 10px; }
+  .done-sub { font-size: 18px !important; color: #64748b; line-height: 1.7; margin-bottom: 24px; }
+  .done-stats { display: flex; justify-content: center; gap: 20px; margin-bottom: 24px; }
+  .done-stat { background: #0f1923; border: 1px solid #1e3a5f; border-radius: 10px; padding: 14px 20px; text-align: center; min-width: 90px; }
+  .done-stat .dsv { font-family: 'Syne', sans-serif; font-size: 24px !important; font-weight: 700; color: #38bdf8; line-height: 1; margin-bottom: 4px; }
+  .done-stat .dsl { font-size: 18px !important; color: #64748b; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: #0f1923;
+    border: 1px solid #166534;
+    border-radius: 10px;
+    padding: 11px 16px;
+    font-size: 18px !important;
+    color: #86efac;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    z-index: 999;
+    animation: slideUp .3s ease;
+    box-shadow: 0 8px 32px rgba(0,0,0,.5);
+    pointer-events: none;
+  }
+
+  .toast.error { border-color: #7f1d1d; color: #fca5a5; }
+
+  @keyframes slideUp { from{transform:translateY(16px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+  .view-toggle { display: flex; gap: 4px; }
+  .vbtn { background: #0f1923; border: 1px solid #1e3a5f; border-radius: 5px; padding: 4px 10px; font-size: 18px !important; font-weight: 600; color: #64748b; cursor: pointer; transition: all .2s; }
+  .vbtn.active { background: rgba(56,189,248,.12); border-color: rgba(56,189,248,.3); color: #38bdf8; }
+  .html-pre { font-size: 18px !important; color: #64748b; white-space: pre-wrap; line-height: 1.6; font-family: monospace; }
+</style>
+</head>
+<body>
+
+<!-- ── SETUP SCREEN ── -->
+<div id="setup-screen">
+  <div class="setup-card">
+    <div class="setup-logo">Isopure Water · IPW Industries Inc.</div>
+    <div class="setup-title">Product Description Agent</div>
+    <div class="setup-sub">Connect your Shopify store and let Claude rewrite your product descriptions one by one — review and approve each before anything goes live.</div>
+
+    <div id="error-box" class="error-box" style="display:none;"></div>
+
+    <div class="field">
+      <label>Shopify Store URL</label>
+      <input type="text" id="inp-store" placeholder="your-store.myshopify.com" />
+      <div class="field-note">Your .myshopify.com domain — no https:// needed</div>
+    </div>
+
+    <div class="field">
+      <label>Admin API Access Token</label>
+      <input type="password" id="inp-token" placeholder="shpat_xxxxxxxxxxxxxxxxxxxx" />
+      <div class="field-note">Settings → Apps → Develop apps → Create app → Install → copy Admin API access token. Grant: read_products, write_products, read_collections.</div>
+    </div>
+
+    <div id="collection-field" class="field" style="display:none;">
+      <label>Filter by Collection (optional)</label>
+      <select id="sel-collection">
+        <option value="">All Products</option>
+      </select>
+      <div class="field-note">Process only a specific collection, or leave blank for all products.</div>
+    </div>
+
+    <button class="btn-primary" id="btn-connect">Connect to Shopify →</button>
+
+  </div>
+</div>
+
+<!-- ── APP SHELL ── -->
+<div id="app-shell">
+  <div class="topbar">
+    <div class="topbar-brand">Product Agent · Isopure Water</div>
+    <div class="topbar-right">
+      <div class="pill">Product <span id="lbl-current">1</span> of <span id="lbl-total">0</span></div>
+      <div class="pill">✓ <span id="lbl-approved" class="green">0</span> updated &nbsp;·&nbsp; ⏭ <span id="lbl-skipped">0</span> skipped</div>
+      <button class="btn-sm" id="btn-save">💾 Save Progress</button>
+      <button class="btn-sm" id="btn-back">← Settings</button>
+    </div>
+  </div>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+  <div class="review-layout">
+    <!-- LEFT -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title current">Current Description</span>
+        <span class="badge badge-live">Live on Shopify</span>
+      </div>
+      <div class="panel-body" id="panel-current">
+        <div class="product-meta">
+          <div class="product-title-text" id="prod-title">—</div>
+          <div class="chips" id="prod-chips"></div>
+        </div>
+        <div class="desc-render" id="current-desc"></div>
+      </div>
+    </div>
+    <!-- RIGHT -->
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-title proposed">Claude's Rewrite</span>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <div class="view-toggle" id="view-toggle" style="display:none;">
+            <button class="vbtn active" onclick="setView('preview')">Preview</button>
+            <button class="vbtn" onclick="setView('html')">HTML</button>
+          </div>
+          <span class="badge" id="badge-right">AI Generated</span>
+        </div>
+      </div>
+      <div class="panel-body" id="panel-proposed">
+        <div class="generating-wrap" id="gen-state">
+          <div class="spinner"></div>
+          <span>Claude is writing a new description…</span>
+        </div>
+        <div id="proposed-preview" style="display:none;"></div>
+        <pre class="html-pre" id="proposed-html" style="display:none;"></pre>
+        <textarea class="edit-ta" id="edit-ta" style="display:none;" placeholder="Edit HTML here…"></textarea>
+      </div>
+    </div>
+  </div>
+  <!-- Action bar -->
+  <div class="action-bar">
+    <div class="action-left">
+      <button class="btn-skip" id="btn-skip">⏭ Skip</button>
+      <button class="btn-edit" id="btn-edit" disabled>✏️ Edit</button>
+      <button class="btn-regen" id="btn-regen" disabled>↻ Regenerate</button>
+    </div>
+    <div class="action-right">
+      <button class="btn-approve" id="btn-approve" disabled>✓ Approve &amp; Update Shopify</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── DONE SCREEN ── -->
+<div id="done-screen" style="display:none;">
+  <div class="done-inner">
+    <div class="done-icon">🎉</div>
+    <div class="done-title">All Done!</div>
+    <div class="done-sub" id="done-sub">You've reviewed all products in this session. Changes pushed to Shopify are live immediately.</div>
+    <div class="done-stats">
+      <div class="done-stat"><div class="dsv" id="done-approved">0</div><div class="dsl">Updated</div></div>
+      <div class="done-stat"><div class="dsv" id="done-skipped">0</div><div class="dsl">Skipped</div></div>
+      <div class="done-stat"><div class="dsv" id="done-total">0</div><div class="dsl">Total</div></div>
+    </div>
+    <button class="btn-primary" id="btn-restart">Start a New Session</button>
+  </div>
+</div>
+
+<script>
+// ─── State ────────────────────────────────────────────────────────────────────
+let store = '', token = '', products = [], currentIndex = 0;
+let generatedHtml = '', isEditing = false, isGenerating = false;
+let approved = 0, skipped = 0;
+let currentView = 'preview';
+
+// ─── DOM refs ─────────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+
+// ─── Proxy base URL ───────────────────────────────────────────────────────────
+const PROXY = 'https://ipw-server-production.up.railway.app';
+
+// ─── Shopify helpers (via Railway proxy) ─────────────────────────────────────
+async function shopifyGet(path) {
+  const url = `${PROXY}/shopify-proxy?path=${encodeURIComponent(path)}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Shopify ${r.status}: ${r.statusText}`);
+  return r.json();
+}
+
+async function shopifyGetWithHeaders(path) {
+  const url = `${PROXY}/shopify-proxy?path=${encodeURIComponent(path)}`;
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(`Shopify ${r.status}: ${r.statusText}`);
+  const data = await r.json();
+  // Parse Link header for next page cursor
+  const link = r.headers.get('x-shopify-link') || r.headers.get('link') || '';
+  const nextMatch = link.match(/<([^>]+)>;\s*rel="next"/);
+  if (nextMatch) {
+    // Extract just the path+query from the full URL
+    try {
+      const nextUrl = new URL(nextMatch[1]);
+      data._nextPath = nextUrl.pathname.replace('/admin/api/2024-01', '') + nextUrl.search;
+    } catch(e) {}
+  }
+  return data;
+}
+
+async function shopifyPut(path, body) {
+  const url = `${PROXY}/shopify-proxy?path=${encodeURIComponent(path)}`;
+  const r = await fetch(url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body)
+  });
+  if (!r.ok) throw new Error(`Shopify ${r.status}: ${r.statusText}`);
+  return r.json();
+}
+
+// ─── Claude helper (via Railway proxy) ───────────────────────────────────────
+async function generateDesc(product) {
+  const plain = product.body_html
+    ? product.body_html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim()
+    : 'No description currently set.';
+
+  const CSS_FRAMEWORK = `
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  .ro-wrap {
+    --deep:#0a1628;--ocean:#0f3460;--blue:#1565c0;--sky:#2196f3;--aqua:#4dd0e1;
+    --white:#ffffff;--offwhite:#f2f7fc;--slate:#dce8f5;--text:#0d1f38;--muted:#4a6280;
+    --gold:#f59e0b;--radius:12px;
+    font-family:'DM Sans',sans-serif;color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-wrap:break-word;word-break:break-word;min-width:0;
+  }
+  .ro-wrap .ro-hero{background:linear-gradient(135deg,var(--deep) 0%,var(--ocean) 50%,#1a5276 100%);color:var(--white);padding:52px 40px 44px;position:relative;overflow:hidden;border-radius:var(--radius) var(--radius) 0 0;}
+  .ro-wrap .ro-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 55% at 95% 45%,rgba(77,208,225,.15) 0%,transparent 65%),radial-gradient(ellipse 40% 40% at 5% 80%,rgba(255,255,255,.05) 0%,transparent 60%);pointer-events:none;}
+  .ro-wrap .ro-eyebrow{font-size:13px !important;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--aqua);margin-bottom:12px;}
+  .ro-wrap .ro-hero h2{font-family:'DM Serif Display',serif;font-size:clamp(26px,4vw,40px) !important;line-height:1.15;font-weight:400;max-width:660px;margin-bottom:16px;color:var(--white);}
+  .ro-wrap .ro-hero h2 em{font-style:italic;color:var(--aqua);}
+  .ro-wrap .ro-tagline{font-size:18px !important;color:rgba(255,255,255,.75);max-width:540px;font-weight:300;margin-bottom:28px;}
+  .ro-wrap .ro-badges{display:flex;flex-wrap:wrap;gap:10px;}
+  .ro-wrap .ro-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:var(--white);font-size:15px !important;font-weight:500;padding:6px 14px;border-radius:40px;backdrop-filter:blur(6px);}
+  .ro-wrap .ro-callout{background:var(--offwhite);border-left:4px solid var(--sky);padding:20px 24px;}
+  .ro-wrap .ro-callout p{font-size:18px !important;color:var(--text);line-height:1.7;margin:0;}
+  .ro-wrap .ro-callout strong{color:var(--ocean);}
+  .ro-wrap .ro-section{padding:36px 40px;border-bottom:1px solid var(--slate);}
+  .ro-wrap .ro-label{font-size:13px !important;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--sky);margin-bottom:8px;}
+  .ro-wrap .ro-title{font-family:'DM Serif Display',serif;font-size:24px !important;color:var(--deep);margin-bottom:20px;font-weight:400;}
+  .ro-wrap .stage-pipeline{display:flex;flex-direction:column;gap:0;margin-top:4px;}
+  .ro-wrap .stage-row{display:grid;grid-template-columns:48px 1fr;gap:0 20px;position:relative;min-width:0;}
+  .ro-wrap .stage-row:not(:last-child) .stage-line{position:absolute;left:23px;top:48px;bottom:0;width:2px;background:var(--slate);}
+  .ro-wrap .stage-num{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--ocean),var(--sky));color:white;display:flex;align-items:center;justify-content:center;font-size:18px !important;font-weight:700;flex-shrink:0;position:relative;z-index:1;margin-top:4px;}
+  .ro-wrap .stage-body{background:var(--offwhite);border:1px solid var(--slate);border-radius:var(--radius);padding:18px 20px;margin-bottom:12px;min-width:0;overflow-wrap:break-word;word-break:break-word;}
+  .ro-wrap .stage-body h3{font-size:20px !important;font-weight:600;color:var(--deep);margin-bottom:4px;}
+  .ro-wrap .stage-tag{display:inline-block;font-size:13px !important;font-weight:700;letter-spacing:.05em;text-transform:uppercase;background:var(--slate);color:var(--ocean);padding:4px 10px;border-radius:6px;margin-bottom:8px;white-space:normal;word-break:break-word;max-width:100%;}
+  .ro-wrap .stage-body p{font-size:18px !important;color:var(--muted);line-height:1.55;margin:0;}
+  .ro-wrap .stage-body .stage-part{font-size:15px !important;color:var(--sky);margin-top:6px;font-weight:500;}
+  .ro-wrap .specs-table{width:100%;border-collapse:collapse;font-size:18px !important;}
+  .ro-wrap .specs-table tr{border-bottom:1px solid var(--slate);}
+  .ro-wrap .specs-table tr:last-child{border-bottom:none;}
+  .ro-wrap .specs-table td{padding:11px 6px;vertical-align:top;}
+  .ro-wrap .specs-table td:first-child{font-weight:500;color:var(--deep);width:44%;padding-right:16px;}
+  .ro-wrap .specs-table td:last-child{color:var(--muted);}
+  .ro-wrap .specs-table tr:hover td{background:var(--offwhite);}
+  .ro-wrap .conditions-table{width:100%;border-collapse:collapse;font-size:18px !important;margin-top:4px;}
+  .ro-wrap .conditions-table th{background:var(--deep);color:var(--white);font-size:15px !important;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:10px 12px;text-align:left;}
+  .ro-wrap .conditions-table th:first-child{border-radius:var(--radius) 0 0 0;}
+  .ro-wrap .conditions-table th:last-child{border-radius:0 var(--radius) 0 0;}
+  .ro-wrap .conditions-table td{padding:10px 12px;border-bottom:1px solid var(--slate);color:var(--text);}
+  .ro-wrap .conditions-table tr:nth-child(even) td{background:var(--offwhite);}
+  .ro-wrap .ro-feature-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(220px,100%),1fr));gap:16px;margin-top:4px;}
+  .ro-wrap .ro-feature-card{background:var(--offwhite);border:1px solid var(--slate);border-radius:var(--radius);padding:20px 18px;}
+  .ro-wrap .ro-feat-icon{width:40px;height:40px;background:linear-gradient(135deg,var(--ocean),var(--sky));border-radius:10px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;}
+  .ro-wrap .ro-feature-card h3{font-size:20px !important;font-weight:600;color:var(--deep);margin-bottom:6px;}
+  .ro-wrap .ro-feature-card p{font-size:18px !important;color:var(--muted);line-height:1.55;margin:0;}
+  .ro-wrap .pro-tip{display:flex;align-items:flex-start;gap:14px;background:#fffbeb;border:1px solid #f5d87a;border-radius:var(--radius);padding:18px 20px;margin-top:20px;}
+  .ro-wrap .pro-tip-icon{font-size:22px !important;flex-shrink:0;}
+  .ro-wrap .pro-tip p{font-size:18px !important;color:#5a4500;line-height:1.6;margin:0;}
+  .ro-wrap .pro-tip strong{color:#3d2e00;}
+  .ro-wrap .install-steps{counter-reset:step;list-style:none;padding:0;margin:4px 0 0;display:flex;flex-direction:column;gap:14px;}
+  .ro-wrap .install-steps li{counter-increment:step;display:flex;align-items:flex-start;gap:14px;font-size:18px !important;color:var(--text);}
+  .ro-wrap .install-steps li::before{content:counter(step);display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--ocean);color:white;font-size:15px !important;font-weight:700;flex-shrink:0;margin-top:1px;}
+  .ro-wrap .filter-schedule{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(180px,100%),1fr));gap:12px;margin-top:4px;}
+  .ro-wrap .schedule-card{background:var(--offwhite);border:1px solid var(--slate);border-radius:var(--radius);padding:16px;}
+  .ro-wrap .schedule-card .interval{font-size:22px !important;font-family:'DM Serif Display',serif;color:var(--sky);font-weight:400;margin-bottom:4px;}
+  .ro-wrap .schedule-card h4{font-size:18px !important;font-weight:600;color:var(--deep);margin-bottom:4px;}
+  .ro-wrap .schedule-card p{font-size:15px !important;color:var(--muted);margin:0;line-height:1.45;}
+  .ro-wrap .benefits-strip{display:flex;flex-wrap:wrap;background:var(--deep);color:var(--white);border-radius:0 0 var(--radius) var(--radius);overflow:hidden;}
+  .ro-wrap .benefit-item{flex:1 1 200px;padding:24px 22px;border-right:1px solid rgba(255,255,255,.1);}
+  .ro-wrap .benefit-item:last-child{border-right:none;}
+  .ro-wrap .bi-icon{font-size:22px !important;margin-bottom:10px;}
+  .ro-wrap .benefit-item h4{font-size:15px !important;font-weight:600;color:var(--aqua);margin-bottom:5px;text-transform:uppercase;letter-spacing:.05em;}
+  .ro-wrap .benefit-item p{font-size:15px !important;color:rgba(255,255,255,.65);line-height:1.55;margin:0;}
+  .ro-wrap .faucet-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(200px,100%),1fr));gap:16px;margin-top:4px;}
+  .ro-wrap .faucet-card{border:2px solid var(--slate);border-radius:var(--radius);padding:18px;text-align:center;}
+  .ro-wrap .faucet-icon{font-size:28px !important;margin-bottom:10px;}
+  .ro-wrap .faucet-card h4{font-size:18px !important;font-weight:600;color:var(--deep);margin-bottom:6px;}
+  .ro-wrap .faucet-card p{font-size:15px !important;color:var(--muted);line-height:1.5;margin:0;}
+  .ro-wrap .spec-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(180px,100%),1fr));gap:12px;margin-top:4px;}
+  .ro-wrap .spec-card{background:var(--offwhite);border:1px solid var(--slate);border-radius:var(--radius);padding:16px;}
+  .ro-wrap .spec-card .sc-label{font-size:13px !important;font-weight:700;letter-spacing:.08em;color:var(--sky);text-transform:uppercase;margin-bottom:4px;}
+  .ro-wrap .spec-card .sc-value{font-size:20px !important;font-weight:600;color:var(--deep);margin-bottom:4px;}
+  .ro-wrap .spec-card .sc-note{font-size:15px !important;color:var(--muted);}
+  @media(max-width:640px){
+    .ro-wrap .ro-hero{padding:36px 24px 32px;}
+    .ro-wrap .ro-section{padding:28px 20px;}
+    .ro-wrap .ro-feature-grid,.ro-wrap .faucet-grid,.ro-wrap .filter-schedule,.ro-wrap .spec-cards{grid-template-columns:1fr;}
+    .ro-wrap .benefits-strip{flex-direction:column;}
+    .ro-wrap .benefit-item{border-right:none;border-bottom:1px solid rgba(255,255,255,.1);}
+  }
+</style>`;
+
+  const styles = [
+    {
+      name: 'Hero-Callout-Bullets',
+      guide: `Write a product description using the .ro-wrap CSS classes. Structure:
+1. A .ro-hero div with .ro-eyebrow, h2 (with <em> on key product name/model), .ro-tagline, and .ro-badges (3-4 .ro-badge spans with a ✓ or relevant emoji)
+2. A .ro-callout div with a <p> — 2-3 sentences about the product's core value, bold key specs with <strong>
+3. A .ro-section div with .ro-label "KEY FEATURES", .ro-title, and a .ro-feature-grid with 4-6 .ro-feature-card divs each having a .ro-feat-icon (use a relevant emoji in a span instead of svg), h3, and p
+4. A .ro-section div with .ro-label "COMPATIBILITY & APPLICATIONS", .ro-title, and a <p> paragraph with model numbers and system types
+5. Close with a .ro-callout with a short trust sentence`
+    },
+    {
+      name: 'Hero-Stages-Specs',
+      guide: `Write a product description using the .ro-wrap CSS classes. Structure:
+1. A .ro-hero div with .ro-eyebrow, h2, .ro-tagline, and .ro-badges (3-4 .ro-badge spans)
+2. A .ro-callout with a 2-sentence intro paragraph
+3. A .ro-section with .ro-label "HOW IT WORKS", .ro-title, and a .stage-pipeline with 3-5 .stage-row divs. Each stage-row: .stage-line div, .stage-num div (number), .stage-body div with .stage-tag span, h3, p, and .stage-part span for service life if relevant
+4. A .ro-section with .ro-label "COMPATIBILITY", .ro-title, and a <p> paragraph`
+    },
+    {
+      name: 'Callout-SpecCards-Table',
+      guide: `Write a product description using the .ro-wrap CSS classes. Structure:
+1. A .ro-callout with a strong 2-sentence opening about what the product does and its key specs
+2. A .ro-section with .ro-label "SPECIFICATIONS", .ro-title, and a .spec-cards grid with 4-6 .spec-card divs — each with .sc-label, .sc-value, and .sc-note
+3. A .ro-section with .ro-label "TECHNICAL DETAILS", .ro-title, and a .specs-table with 5-7 rows of spec data
+4. A .ro-section with .ro-label "COMPATIBILITY & APPLICATIONS", .ro-title, and a <p> paragraph
+5. A .pro-tip div with 💧 emoji and a practical tip or trust statement`
+    },
+    {
+      name: 'Hero-Features-Schedule',
+      guide: `Write a product description using the .ro-wrap CSS classes. Structure:
+1. A .ro-hero div with .ro-eyebrow, h2 (em on product name), .ro-tagline, and .ro-badges
+2. A .ro-section with .ro-label "WHY IT WORKS", .ro-title, and a .ro-feature-grid with 4-5 .ro-feature-card divs (emoji in .ro-feat-icon span, h3, p)
+3. A .ro-section with .ro-label "COMPATIBILITY", .ro-title, and a <p> paragraph with model numbers
+4. If the product has replaceable parts/filters: a .ro-section with .ro-label "MAINTENANCE", .ro-title, and a .filter-schedule with 2-4 .schedule-card divs (.interval, h4, p)
+5. A .benefits-strip div with 3-4 .benefit-item divs (.bi-icon emoji, h4, p)`
+    },
+    {
+      name: 'Callout-Table-Steps',
+      guide: `Write a product description using the .ro-wrap CSS classes. Structure:
+1. A .ro-callout with a confident 2-sentence opening
+2. A .ro-section with .ro-label "SPECIFICATIONS", .ro-title, and a .specs-table with 6-8 rows
+3. A .ro-section with .ro-label "INSTALLATION & USE", .ro-title, and an <ol class="install-steps"> with 3-5 steps
+4. A .ro-section with .ro-label "COMPATIBILITY", .ro-title, and a <p> paragraph
+5. A .pro-tip div with 🔧 emoji and a practical installation or usage tip`
+    }
+  ];
+  const style = styles[Math.floor(Math.random() * styles.length)];
+
+  const prompt = `You are a copywriter for Isopure Water (isopurewater.com). Write a styled HTML product description wrapped in <div class="ro-wrap"> using the CSS classes defined in the framework.
+
+PRODUCT:
+Title: ${product.title}
+Vendor: ${product.vendor || 'Unknown'}
+Type: ${product.product_type || 'Unknown'}
+Tags: ${product.tags || 'None'}
+Current description: ${plain}
+
+LAYOUT TEMPLATE — ${style.name}:
+${style.guide}
+
+VOICE & TONE:
+- Knowledgeable, direct, never salesy. No exclamation marks.
+- Include model numbers, sizes, micron ratings, brand names naturally for SEO.
+- Like advice from someone who actually knows water filtration.
+
+OUTPUT RULES:
+- Wrap everything in <div class="ro-wrap">...</div>
+- Use ONLY the CSS classes defined above — no inline styles, no extra CSS
+- No markdown, no code fences, no explanation
+- Return ONLY the raw HTML starting with <div class="ro-wrap">
+- IMPORTANT: For simple single-part products (o-rings, fittings, cartridges, small accessories), skip complex multi-column grids. Use the callout + specs-table + compatibility paragraph structure instead — clean and simple is better than overbuilt.
+- IMPORTANT: Never put text inside a grid cell that is wider than 200px without wrapping — keep all text short and concise inside cards
+- IMPORTANT: Keep .stage-tag text to 3 words maximum (e.g. 'SEDIMENT FILTER', 'RO MEMBRANE', 'CARBON BLOCK') — never long phrases that wrap vertically`;
+
+  const fullHtml = CSS_FRAMEWORK + '\n' + '{{CONTENT}}';
+  // We'll insert the CSS once and let Claude fill in the content
+  const res = await fetch(`${PROXY}/claude-proxy`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      max_tokens: 2000,
+      messages: [{ role: 'user', content: prompt }]
+    })
+  });
+
+  const data = await res.json();
+  if (data.error) throw new Error(data.error.message || data.error);
+  let text = data.content[0].text.trim();
+  text = text.replace(/^```[\w]*\n?/i, '').replace(/\n?```$/i, '').trim();
+  // Prepend the CSS framework so styles render on Shopify
+  return CSS_FRAMEWORK + '\n' + text;
+}
+
+// ─── Save / Resume progress ──────────────────────────────────────────────────
+const SAVE_KEY = 'ipw_agent_progress';
+
+function saveProgress() {
+  if (!products.length) return;
+  const data = {
+    index: currentIndex,
+    total: products.length,
+    approved,
+    skipped,
+    productId: products[currentIndex]?.id,
+    productTitle: products[currentIndex]?.title,
+    savedAt: new Date().toLocaleString()
+  };
+  localStorage.setItem(SAVE_KEY, JSON.stringify(data));
+  showToast('Progress saved — product ' + (currentIndex + 1) + ' of ' + products.length + ' 💾');
+}
+
+function checkSavedProgress() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+    if (!saved || !saved.index) return;
+    // Show saved info on the connect button
+    const btn = $('btn-connect');
+    if (btn) btn.textContent = `Connect & Resume (product ${saved.index + 1} of ${saved.total}) →`;
+  } catch(e) {}
+}
+
+function clearSavedProgress() {
+  localStorage.removeItem(SAVE_KEY);
+}
+
+// ─── Setup flow ───────────────────────────────────────────────────────────────
+let connected = false;
+checkSavedProgress();
+
+$('btn-connect').addEventListener('click', async () => {
+  const rawStore = $('inp-store').value.trim().replace(/^https?:\/\//, '').replace(/\/$/, '');
+  const rawToken = $('inp-token').value.trim();
+
+  if (!rawStore || !rawToken) { showError('Please enter your store URL and access token.'); return; }
+
+  store = rawStore;
+  token = rawToken;
+  connected = false;
+
+  $('btn-connect').disabled = true;
+  $('btn-connect').textContent = 'Connecting…';
+  hideError();
+
+  try {
+    // Quick connection test first
+    await shopifyGet('/products.json?limit=1');
+    connected = true;
+    $('btn-connect').textContent = 'Loading products…';
+
+    products = [];
+    const collId = $('sel-collection') ? $('sel-collection').value : '';
+    let page = 1;
+    // Request only active products directly from Shopify API
+    while (true) {
+      const base = collId
+        ? `/products.json?status=active&limit=250&page=${page}&collection_id=${collId}`
+        : `/products.json?status=active&limit=250&page=${page}`;
+      const data = await shopifyGet(base);
+      const batch = data.products || [];
+      if (batch.length === 0) break;
+      products = products.concat(batch);
+      $('btn-connect').textContent = `Loading… ${products.length} active products`;
+      if (batch.length < 250) break;
+      page++;
+    }
+    if (products.length === 0) { showError('No active products found.'); $('btn-connect').disabled = false; $('btn-connect').textContent = 'Start Reviewing →'; return; }
+    // Check for saved progress and auto-resume
+    try {
+      const saved = JSON.parse(localStorage.getItem(SAVE_KEY));
+      if (saved && saved.index > 0 && saved.index < products.length) {
+        const resumeMsg = 'Resume from product ' + (saved.index + 1) + ' of ' + products.length + '?\n"' + saved.productTitle + '"\n\nSaved: ' + saved.savedAt;
+        const resume = confirm(resumeMsg);
+        if (resume) {
+          startReview(saved.index);
+        } else {
+          clearSavedProgress();
+          startReview(0);
+        }
+      } else {
+        startReview(0);
+      }
+    } catch(e) {
+      startReview(0);
+    }
+  } catch(e) {
+    showError('Failed to load products: ' + e.message);
+    $('btn-connect').disabled = false;
+    $('btn-connect').textContent = 'Start Reviewing →';
+  }
+});
+
+function showError(msg) { $('error-box').textContent = msg; $('error-box').style.display = 'block'; }
+function hideError() { $('error-box').style.display = 'none'; }
+
+// ─── Review flow ──────────────────────────────────────────────────────────────
+function startReview(resumeIndex = 0) {
+  currentIndex = resumeIndex; approved = 0; skipped = 0;
+  $('setup-screen').style.display = 'none';
+  $('app-shell').style.display = 'flex';
+  updateStats();
+  loadProduct();
+}
+
+
+
+function loadProduct() {
+  if (currentIndex >= products.length) { showDone(); return; }
+  const p = products[currentIndex];
+
+  // Left panel
+  $('prod-title').textContent = p.title;
+  $('prod-chips').innerHTML = [
+    p.vendor ? `<span class="chip">📦 ${p.vendor}</span>` : '',
+    p.product_type ? `<span class="chip">🏷 ${p.product_type}</span>` : '',
+    `<span class="chip">ID: ${p.id}</span>`
+  ].join('');
+
+  if (p.body_html) {
+    $('current-desc').innerHTML = p.body_html;
+  } else {
+    $('current-desc').innerHTML = '<div class="empty-desc">No description currently set for this product.</div>';
+  }
+
+  // Right panel — reset
+  isEditing = false;
+  generatedHtml = '';
+  currentView = 'preview';
+  setRightState('generating');
+  generate();
+}
+
+function setRightState(state) {
+  // states: generating | ready | editing
+  $('gen-state').style.display = state === 'generating' ? 'flex' : 'none';
+  $('proposed-preview').style.display = (state === 'ready' && currentView === 'preview') ? 'block' : 'none';
+  $('proposed-html').style.display = (state === 'ready' && currentView === 'html') ? 'block' : 'none';
+  $('edit-ta').style.display = state === 'editing' ? 'block' : 'none';
+  $('view-toggle').style.display = state === 'ready' ? 'flex' : 'none';
+
+  const badge = $('badge-right');
+  if (state === 'generating') { badge.className = 'badge badge-gen'; badge.textContent = 'Generating…'; }
+  else if (state === 'editing') { badge.className = 'badge badge-edit'; badge.textContent = 'Editing'; }
+  else { badge.className = 'badge badge-ai'; badge.textContent = 'AI Generated'; }
+
+  const busy = state === 'generating';
+  $('btn-edit').disabled = busy || state === 'editing' || !generatedHtml;
+  $('btn-regen').disabled = busy;
+  $('btn-approve').disabled = busy;
+}
+
+function setView(v) {
+  currentView = v;
+  document.querySelectorAll('.vbtn').forEach(b => b.classList.toggle('active', b.textContent.toLowerCase() === v));
+  $('proposed-preview').style.display = v === 'preview' ? 'block' : 'none';
+  $('proposed-html').style.display = v === 'html' ? 'block' : 'none';
+}
+
+async function generate() {
+  isGenerating = true;
+  setRightState('generating');
+  try {
+    const html = await generateDesc(products[currentIndex]);
+    generatedHtml = html;
+    $('proposed-preview').innerHTML = html;
+    $('proposed-html').textContent = html;
+    $('edit-ta').value = html;
+    setRightState('ready');
+  } catch(e) {
+    generatedHtml = '';
+    $('proposed-preview').innerHTML = '<div class="empty-desc">Generation failed — click Regenerate to try again.<br><br>' + e.message + '</div>';
+    setRightState('ready');
+    showToast('Generation failed: ' + e.message, 'error');
+  }
+  isGenerating = false;
+}
+
+$('btn-skip').addEventListener('click', () => {
+  skipped++;
+  updateStats();
+  advance();
+});
+
+$('btn-edit').addEventListener('click', () => {
+  isEditing = true;
+  $('edit-ta').value = generatedHtml;
+  setRightState('editing');
+});
+
+$('btn-regen').addEventListener('click', () => {
+  isEditing = false;
+  generate();
+});
+
+$('btn-approve').addEventListener('click', async () => {
+  const html = isEditing ? $('edit-ta').value : generatedHtml;
+  if (!html) return;
+  $('btn-approve').disabled = true;
+  $('btn-approve').textContent = 'Saving…';
+  try {
+    await shopifyPut(`/products/${products[currentIndex].id}.json`, {
+      product: { id: products[currentIndex].id, body_html: html }
+    });
+    approved++;
+    updateStats();
+    showToast('Updated in Shopify ✓');
+    $('btn-approve').disabled = false;
+    $('btn-approve').textContent = '✓ Approve & Update Shopify';
+    advance();
+  } catch(e) {
+    showToast('Save failed: ' + e.message, 'error');
+    $('btn-approve').disabled = false;
+    $('btn-approve').textContent = '✓ Approve & Update Shopify';
+  }
+});
+
+$('btn-save').addEventListener('click', saveProgress);
+
+$('btn-back').addEventListener('click', () => {
+  $('app-shell').style.display = 'none';
+  $('setup-screen').style.display = 'flex';
+  $('btn-connect').disabled = false;
+  $('btn-connect').textContent = 'Start Reviewing →';
+});
+
+function advance() {
+  currentIndex++;
+  updateStats();
+  saveProgress();
+  if (currentIndex >= products.length) { clearSavedProgress(); showDone(); return; }
+  loadProduct();
+}
+
+function updateStats() {
+  const total = products.length;
+  $('lbl-current').textContent = Math.min(currentIndex + 1, total);
+  $('lbl-total').textContent = total;
+  $('lbl-approved').textContent = approved;
+  $('lbl-skipped').textContent = skipped;
+  const pct = total > 0 ? (currentIndex / total) * 100 : 0;
+  $('progress-fill').style.width = pct + '%';
+}
+
+function showDone() {
+  $('app-shell').style.display = 'none';
+  $('done-screen').style.display = 'flex';
+  $('done-approved').textContent = approved;
+  $('done-skipped').textContent = skipped;
+  $('done-total').textContent = products.length;
+  $('done-sub').textContent = `You reviewed all ${products.length} products. ${approved} description${approved !== 1 ? 's' : ''} updated live on Shopify.`;
+}
+
+$('btn-restart').addEventListener('click', () => {
+  $('done-screen').style.display = 'none';
+  $('setup-screen').style.display = 'flex';
+  connected = false;
+  products = [];
+  $('btn-connect').textContent = 'Connect to Shopify →';
+  $('btn-connect').disabled = false;
+  $('collection-field').style.display = 'none';
+});
+
+// ─── Toast ────────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg, type='success') {
+  const existing = document.querySelector('.toast');
+  if (existing) existing.remove();
+  clearTimeout(toastTimer);
+  const el = document.createElement('div');
+  el.className = 'toast' + (type === 'error' ? ' error' : '');
+  el.innerHTML = (type === 'success' ? '✓ ' : '✕ ') + msg;
+  document.body.appendChild(el);
+  toastTimer = setTimeout(() => el.remove(), 3200);
+}
+</script>
+</body>
+</html>
